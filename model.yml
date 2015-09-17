@@ -1,0 +1,28 @@
+repository:
+  - owner_id
+  - owner_type
+  - name
+  - tags
+  - is_public
+  - source_code_url
+
+repository_tag:
+  - repository
+  - name
+  - reference
+  - docker_file_path
+
+build:
+  - id
+  - repository_tag
+  - start_date
+  - end_date
+  - std_out
+  - std_error
+  - state
+
+user:
+  - name
+
+organization:
+  - name

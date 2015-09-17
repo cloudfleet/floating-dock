@@ -1,0 +1,21 @@
+default: &default
+  host: <%= ENV["DB_HOST"] %>
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  database: rails_db
+  username: rails_db
+  password: rails_db
+
+
+development:
+  <<: *default
+
+test:
+  adapter: sqlite3
+  pool: 5
+  timeout: 5000
+  database: db/test.sqlite3
+
+production:
+  <<: *default
