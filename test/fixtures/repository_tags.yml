@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  repository_id: 
+  name: MyString
+  reference: MyString
+  docker_file_path: MyString
+
+two:
+  repository_id: 
+  name: MyString
+  reference: MyString
+  docker_file_path: MyString

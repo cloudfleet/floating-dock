@@ -1,5 +1,5 @@
 repository:
-  - owner_id
+  - owner_name
   - owner_type
   - name
   - tags
@@ -13,16 +13,27 @@ repository_tag:
   - docker_file_path
 
 build:
-  - id
   - repository_tag
   - start_date
   - end_date
   - std_out
   - std_error
   - state
+  - builder
 
 user:
   - name
+  - email
+  - type
 
 organization:
   - name
+
+organization_user:
+  - user
+  - organisation
+  - role
+
+builder:
+  - host
+  - port

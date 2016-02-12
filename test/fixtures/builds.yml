@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  repository_tag_id: 
+  start: 2016-02-12 00:41:56
+  end: 2016-02-12 00:41:56
+  std_out: MyText
+  std_err: MyText
+  state: MyString
+  builder_id: 
+
+two:
+  repository_tag_id: 
+  start: 2016-02-12 00:41:56
+  end: 2016-02-12 00:41:56
+  std_out: MyText
+  std_err: MyText
+  state: MyString
+  builder_id: 
