@@ -1,5 +1,19 @@
 Rails.application.routes.draw do
   mount_devise_token_auth_for 'User', at: 'auth'
+
+  namespace :api do
+    namespace :v1 do
+      scope :repos do
+        get '/', to: 'repositories#index'
+        get '/:namespace/:name', to: 'repositories#show'
+        get '/:namespace/:repository/builds/:id/logs', to: 'builds#logs'
+      end
+      scope :github do
+        post '/pushes/:organization/', to: 'github#push'
+      end
+    end
+  end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

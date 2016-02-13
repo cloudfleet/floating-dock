@@ -4,4 +4,9 @@ class User < ActiveRecord::Base
           :recoverable, :rememberable, :trackable, :validatable,
           :confirmable, :omniauthable
   include DeviseTokenAuth::Concerns::User
+
+  def repositories
+    Repository.find_by(owner_name: self.name)
+  end
+
 end
