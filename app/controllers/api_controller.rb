@@ -1,6 +1,9 @@
 class ApiController < ActionController::API
   include ActionController::Serialization
   include DeviseTokenAuth::Concerns::SetUserByToken
+
+  respond_to :json
+
   before_filter :cors_preflight_check
   after_filter :cors_set_access_control_headers
 

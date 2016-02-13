@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160212005051) do
+ActiveRecord::Schema.define(version: 20160213202047) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,7 +21,11 @@ ActiveRecord::Schema.define(version: 20160212005051) do
     t.integer  "port"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "locked_at"
+    t.integer  "build_id"
   end
+
+  add_index "builders", ["build_id"], name: "index_builders_on_build_id", using: :btree
 
   create_table "builds", force: :cascade do |t|
     t.integer  "repository_tag_id"
@@ -37,6 +41,22 @@ ActiveRecord::Schema.define(version: 20160212005051) do
 
   add_index "builds", ["builder_id"], name: "index_builds_on_builder_id", using: :btree
   add_index "builds", ["repository_tag_id"], name: "index_builds_on_repository_tag_id", using: :btree
+
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer  "priority",   default: 0, null: false
+    t.integer  "attempts",   default: 0, null: false
+    t.text     "handler",                null: false
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
   create_table "organization_users", force: :cascade do |t|
     t.integer  "user_id"
@@ -105,6 +125,7 @@ ActiveRecord::Schema.define(version: 20160212005051) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true, using: :btree
 
+  add_foreign_key "builders", "builds"
   add_foreign_key "builds", "builders"
   add_foreign_key "builds", "repository_tags"
   add_foreign_key "organization_users", "organizations"
