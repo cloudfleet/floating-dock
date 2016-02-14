@@ -9,6 +9,7 @@ gem 'activesupport-json_encoder'
 # Model serialization
 gem 'active_model_serializers'
 gem 'delayed_job_active_record'
+gem 'net-ssh'
 
 
 gem 'devise_token_auth'
