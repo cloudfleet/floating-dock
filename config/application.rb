@@ -23,5 +23,12 @@ module App
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
     config.active_job.queue_adapter = :delayed_job
+
+    config.x.marina.docker_registry_host = ENV['DOCKER_REGISTRY_HOST']
+    config.x.marina.docker_registry_port = ENV['DOCKER_REGISTRY_PORT']
+    config.x.marina.docker_registry_user = ENV['DOCKER_REGISTRY_USER']
+    config.x.marina.docker_registry_email = ENV['DOCKER_REGISTRY_EMAIL']
+    config.x.marina.docker_registry_password = ENV['DOCKER_REGISTRY_PASSWORD']
+
   end
 end

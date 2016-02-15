@@ -17,7 +17,7 @@ class Api::V1::GithubController < ApiController
     owner_name = params[:repository][:owner][:name]
     name = params[:repository][:name]
     @repository = Repository.find_by!(owner_name: owner_name, name: name)
-    @tag = @repository.repository_tags.where(reference: params[:ref]).first
+    @tag = @repository.repository_tags.where(reference: params[:ref].split('/').last).first
   end
 
 end
