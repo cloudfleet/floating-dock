@@ -1,0 +1,4 @@
+[submodule "public"]
+	path = public
+	url = https://github.com/cloudfleet/marina-frontend.git
+	branch = production
