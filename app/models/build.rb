@@ -11,6 +11,7 @@ class Build < ActiveRecord::Base
     assign_to_builder
 
     self.state = execute_on_build_machine ? 'success' : 'failure'
+    self.end = DateTime.current
     save!
 
     self.builder.release
