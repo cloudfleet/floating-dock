@@ -3,8 +3,11 @@ class Api::V1::RepositoriesController < ApiController
   before_action :set_repository, only: [:show, :edit]
 
   def index
-    @repositories = Repository.all
-
+    if params[:namespace]
+      @repositories = Repository.where(owner_name: params[:namespace])
+    else
+      @repositories = Repository.all
+    end
     render json: @repositories
   end
 

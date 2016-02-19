@@ -14,6 +14,7 @@ gem 'rye'
 
 
 gem 'devise_token_auth'
+gem 'cancancan', '~> 1.10'
 gem 'omniauth'
 gem 'pg'
 

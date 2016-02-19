@@ -48,6 +48,7 @@ GEM
       debug_inspector (>= 0.0.1)
     builder (3.2.2)
     byebug (6.0.2)
+    cancancan (1.13.1)
     debug_inspector (0.0.2)
     delayed_job (4.1.1)
       activesupport (>= 3.0, < 5.0)
@@ -165,6 +166,7 @@ DEPENDENCIES
   active_model_serializers
   activesupport-json_encoder
   byebug
+  cancancan (~> 1.10)
   delayed_job_active_record
   devise_token_auth
   net-ssh

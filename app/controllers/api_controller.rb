@@ -1,11 +1,16 @@
 class ApiController < ActionController::API
   include ActionController::Serialization
   include DeviseTokenAuth::Concerns::SetUserByToken
+  include CanCan::ControllerAdditions
 
   respond_to :json
 
   before_filter :cors_preflight_check
   after_filter :cors_set_access_control_headers
+
+  def current_ability
+    @current_ability ||= Ability.new(current_api_v1_user)
+  end
 
   def cors_set_access_control_headers
     headers['Access-Control-Allow-Origin'] = '*'
