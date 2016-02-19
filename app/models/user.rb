@@ -5,6 +5,9 @@ class User < ActiveRecord::Base
           :confirmable, :omniauthable
   include DeviseTokenAuth::Concerns::User
 
+  has_many :organization_users
+  has_and_belongs_to_many :organizations, through: :organization_users
+
   def repositories
     Repository.find_by(owner_name: self.name)
   end
