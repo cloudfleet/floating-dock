@@ -8,7 +8,7 @@ class Api::V1::OrganizationsController < ApiController
 
   def update
     @organization.update(organization_params)
-    render json: @orgaization
+    render json: @organization
   end
 
   def create

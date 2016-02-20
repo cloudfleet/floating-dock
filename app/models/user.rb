@@ -12,4 +12,8 @@ class User < ActiveRecord::Base
     Repository.find_by(owner_name: self.name)
   end
 
+  def available_namespaces
+    [self.name] + organization_users.where(role: :admin).map{|ou| Organization.find(ou.organization_id).name}
+  end
+
 end

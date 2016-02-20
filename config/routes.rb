@@ -8,6 +8,7 @@ Rails.application.routes.draw do
         get '/', to: 'repositories#index'
         get '/:namespace', to: 'repositories#index'
         get '/:namespace/:name', to: 'repositories#show'
+        put '/:namespace/:name', to: 'repositories#update'
         get '/:namespace/:repository/builds/:id/logs', to: 'builds#logs'
         post '/:namespace/:repository/builds', to: 'builds#new'
       end
