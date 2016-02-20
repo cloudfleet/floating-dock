@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      mount_devise_token_auth_for 'User', at: 'auth', skip: [:omniauth_callbacks]
+      mount_devise_token_auth_for 'User', at: 'auth', skip: [:omniauth_callbacks], controllers: {
+        token_validations:  'overrides/token_validations'
+      }
       scope :repos do
         get '/', to: 'repositories#index'
         get '/:namespace', to: 'repositories#index'
