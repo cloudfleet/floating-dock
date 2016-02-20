@@ -16,6 +16,12 @@ class Api::V1::RepositoriesController < ApiController
     render json: @repository
   end
 
+  def create
+    authenticate_repository_write @repository, params
+    Repository.create(repository_params)
+    render json: @repository
+  end
+
   def update
     authenticate_repository_write @repository, params
     @repository.update(repository_params)
@@ -45,8 +51,12 @@ class Api::V1::RepositoriesController < ApiController
   end
 
   def authenticate_repository_write(repository, params)
-    ([repository.owner_name, params[:owner_name]].uniq - current_api_v1_user.available_namespaces).empty?
-    # means that both old and new owner name are accessible to the user
+    # on creation repository is nil
+    (
+      (!repository || current_api_v1_user.available_namespaces.include?(repository.owner_name)) \
+      && \
+      current_api_v1_user.available_namespaces.include?(params[:owner_name]) \
+    )
   end
 
 end

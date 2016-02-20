@@ -7,10 +7,10 @@ Rails.application.routes.draw do
       scope :repos do
         get '/', to: 'repositories#index'
         get '/:namespace', to: 'repositories#index'
+        post '', to: 'repositories#create'
         get '/:namespace/:name', to: 'repositories#show'
         put '/:namespace/:name', to: 'repositories#update'
         get '/:namespace/:repository/builds/:id/logs', to: 'builds#logs'
-        post '/:namespace/:repository/builds', to: 'builds#new'
       end
       resources :organizations
       resources :users, only: :show
