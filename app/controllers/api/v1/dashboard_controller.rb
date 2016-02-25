@@ -18,8 +18,8 @@ class Api::V1::DashboardController < ApiController
         pending: repositories.map{|r| r.builds.where(end: nil).count}.reduce(:+),
         failure: repositories.map{|r| r.builds.where(state: 'failure').count}.reduce(:+)
       },
-      tags_with_failure: repositories.collect(&:repository_tags).reduce(:+).select{|rt| rt.last_build && rt.last_build.state == "failure"},
-      pending_builds: repositories.collect(&:builds).reduce(:+).select{|b| b.end == nil}
+      tags_with_failure: repositories.collect(&:repository_tags).flatten.select{|rt| rt.last_build && rt.last_build.state == "failure"},
+      pending_builds: repositories.collect(&:builds).flatten.select{|b| b.end == nil}
     }
   end
 

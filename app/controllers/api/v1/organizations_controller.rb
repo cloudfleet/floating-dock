@@ -22,13 +22,15 @@ class Api::V1::OrganizationsController < ApiController
   end
 
   def create
-    @organization = Organization.create(organization_params)
-    @organization_user = OrganizationUser.create(user: current_user, orgaization: @organization, type: :admin)
+    Organization.transaction do
+      @organization = Organization.create(organization_params)
+      @organization_user = OrganizationUser.create(user: current_api_v1_user, organization: @organization, role: :admin)
+    end
     render json: @organization
   end
 
   def organization_params
-    params.require(:name)
+    params.permit(:name)
   end
 
 end
