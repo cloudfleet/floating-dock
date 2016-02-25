@@ -14,10 +14,20 @@ class Api::V1::GithubController < ApiController
 
 
   def set_tag
+
+    authorize_namespace!
+
     owner_name = params[:repository][:owner][:name]
     name = params[:repository][:name]
     @repository = Repository.find_by!(owner_name: owner_name, name: name)
     @tag = @repository.repository_tags.where(reference: params[:ref].split('/').last).first
+  end
+
+  def authorize_namespace!
+    owner = User.find_by(name: params[:namespace]) || Organization.find_by(name: params[:namespace])
+    unless owner.api_key == params[:api_key] && params[:namespace] == params[:repository][:owner][:name]
+      CanCan::AccessDenied.new("Not authorized!", :push, Build)
+    end
   end
 
 end

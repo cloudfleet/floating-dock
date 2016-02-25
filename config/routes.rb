@@ -26,7 +26,7 @@ Rails.application.routes.draw do
         end
       end
       scope :github do
-        post '/pushes/:namespace/', to: 'github#push'
+        post '/pushes/:namespace/:api_key', to: 'github#push'
       end
     end
   end
