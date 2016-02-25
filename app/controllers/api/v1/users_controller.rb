@@ -6,6 +6,16 @@ class Api::V1::UsersController < ApiController
     render json: @user
   end
 
+  def show_api_key
+    render json: {api_key: @user.api_key}
+  end
+
+  def generate_api_key
+    @user.api_key =  (0..32).map { ('a'..'z').to_a[rand(26)] }.join
+    @user.save!
+    render json: {result: 'success'}
+  end
+
   def user_params
     params.require(:name)
   end

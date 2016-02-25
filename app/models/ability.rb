@@ -3,7 +3,9 @@ class Ability
 
   def initialize(user)
     if user
-      can :create, Organization
+      can :manage, Organization, name: user.available_namespaces
+      can :manage, Repository, owner_name: user.available_namespaces
+      can :manage, User, id: user.id
     end
 
     can :read, Organization

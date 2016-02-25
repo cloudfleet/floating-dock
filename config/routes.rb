@@ -13,10 +13,20 @@ Rails.application.routes.draw do
         put '/:namespace/:name', to: 'repositories#update'
         get '/:namespace/:repository/builds/:id/logs', to: 'builds#logs'
       end
-      resources :organizations
-      resources :users, only: :show
+      resources :organizations do
+        member do
+          get 'show_api_key'
+          post 'generate_api_key'
+        end
+      end
+      resources :users, only: :show do
+        member do
+          get 'show_api_key'
+          post 'generate_api_key'
+        end
+      end
       scope :github do
-        post '/pushes/:organization/', to: 'github#push'
+        post '/pushes/:namespace/', to: 'github#push'
       end
     end
   end
