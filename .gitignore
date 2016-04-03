@@ -15,6 +15,6 @@
 /log/*
 !/log/.keep
 /tmp
-Dockerfile
+DockerfileRDE
 docker-compose.yml
 .env
