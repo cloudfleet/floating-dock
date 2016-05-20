@@ -37,9 +37,7 @@ class Build < ActiveRecord::Base
     success = false
 
     begin
-      bbox = Rye::Box.new(self.builder.host, {user: 'root'} )
-
-      Rye::Cmd.add_command :build_and_push, 'marina/scripts/build_and_push_docker_image.sh'
+      bbox = self.builder.rye_box
 
       result = bbox.build_and_push(
         repository.source_code_url,
@@ -51,7 +49,7 @@ class Build < ActiveRecord::Base
         Rails.configuration.x.marina.docker_registry_password,
         Rails.configuration.x.marina.docker_registry_email
       )
-      self.std_out = result.stdout
+      self.std_out = result.stdout.to_s
       self.std_err = result.stderr
       save!
       success = result.exit_status == 0
