@@ -2,7 +2,8 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       mount_devise_token_auth_for 'User', at: 'auth', skip: [:omniauth_callbacks], controllers: {
-        token_validations:  'overrides/token_validations'
+        token_validations:  'overrides/token_validations',
+        sessions:  'overrides/sessions'
       }
       get '/dashboard', to: 'dashboard#show'
       scope :repos do
