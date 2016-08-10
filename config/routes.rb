@@ -14,6 +14,7 @@ Rails.application.routes.draw do
         put '/:namespace/:name', to: 'repositories#update'
         get '/:namespace/:repository/builds/:id/logs', to: 'builds#logs'
       end
+      resources :namespaces, only: :show
       resources :organizations do
         member do
           get 'show_api_key'
