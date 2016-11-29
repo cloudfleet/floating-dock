@@ -49,6 +49,6 @@ class Builder < ActiveRecord::Base
   end
 
   def rye_box
-    Rye::Box.new(self.host, {user: 'root', password_prompt: false, port: self.port, keys: ['~/.ssh/id_rsa.pub']})
+    Rye::Box.new(self.host, {user: 'root', password_prompt: false, port: self.port, keys: ['~/.ssh/id_rsa']})
   end
 end
