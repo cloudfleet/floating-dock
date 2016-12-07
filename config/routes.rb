@@ -30,6 +30,14 @@ Rails.application.routes.draw do
       scope :github do
         post '/pushes/:namespace/:api_key', to: 'github#push'
       end
+      resources :builders do
+        member do
+          post 'request_build'
+        end
+        collection do
+          get 'scripts.tar.gz', to: 'builders#get_scripts'
+        end
+      end
     end
   end
 

@@ -30,6 +30,8 @@ module App
     config.x.marina.docker_registry_email = ENV['DOCKER_REGISTRY_EMAIL']
     config.x.marina.docker_registry_password = ENV['DOCKER_REGISTRY_PASSWORD']
 
+    config.x.marina.new_builder_key = ENV['NEW_BUILDER_KEY']
+
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
       address:              ENV['MAIL_HOST'],

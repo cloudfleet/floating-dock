@@ -4,6 +4,14 @@ class Build < ActiveRecord::Base
 
   delegate :repository, to: :repository_tag
 
+  def self.reserve(builder)
+    all.detect do |build|
+      count = where(builder_id: nil).where(id: build.id).update_all(builder_id: builder.id)
+      count == 1 && build.reload
+    end
+  end
+
+
   def execute
     puts "Executing build #{id}"
     logger.info "Executing build #{id}"

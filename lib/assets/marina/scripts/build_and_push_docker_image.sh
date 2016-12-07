@@ -2,14 +2,6 @@
 
 set -e
 
-# run as:
-# ./scripts/build_and_push_docker_image.sh \
-#    <git url> \
-#    <git branch> \
-#    <Dockerfile path> \
-#    <tagname>
-
-#TODO: https://github.com/docker-library/node.git /0.10/slim
 
 DIR=$( cd "$( dirname $0 )" && pwd )
 

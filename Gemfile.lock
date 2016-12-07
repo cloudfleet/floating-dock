@@ -80,6 +80,7 @@ GEM
       mime-types (>= 1.16, < 3)
     mime-types (2.6.2)
     mini_portile (0.6.2)
+    minitar (0.5.4)
     minitest (5.8.0)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
@@ -171,6 +172,7 @@ DEPENDENCIES
   cancancan (~> 1.10)
   delayed_job_active_record
   devise_token_auth
+  minitar
   net-ssh
   omniauth
   pg
@@ -182,3 +184,6 @@ DEPENDENCIES
   sendgrid
   spring
   web-console (~> 2.0)
+
+BUNDLED WITH
+   1.13.5
