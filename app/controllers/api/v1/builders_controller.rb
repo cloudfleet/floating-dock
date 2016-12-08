@@ -62,7 +62,7 @@ class Api::V1::BuildersController < ApiController
     suffix = '.tar.gz'
     f = Tempfile.new [prefix, suffix], Rails.root.join('tmp')
 
-    Minitar.pack(Rails.root.join('lib/assets/marina/scripts'), Zlib::GzipWriter.new(File.open(f, 'wb'))
+    Minitar.pack(Rails.root.join('lib/assets/marina/scripts'), Zlib::GzipWriter.new(File.open(f, 'wb')))
 
     send_file f
   end
