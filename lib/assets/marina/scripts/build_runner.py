@@ -90,14 +90,18 @@ def main():
         print("Registered.")
 
     while True:
-        print("Request build ...")
-        new_build = request_build(config, floating_dock_address)
+        try:
+            print("Request build ...")
+            new_build = request_build(config, floating_dock_address)
 
-        if new_build:
-            print("Building")
-            build_and_push(new_build, config)
-        else:
+            if new_build:
+                print("Building")
+                build_and_push(new_build, config)
+            else:
+                time.sleep(30)
+        except:
             time.sleep(30)
+            pass
 
 if  __name__ =='__main__':
     main()
