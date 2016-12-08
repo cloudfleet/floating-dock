@@ -57,10 +57,10 @@ class Api::V1::BuildersController < ApiController
   end
 
   def get_scripts
-    send_data gz(tar(Rails.root.join('lib/assets/marina/scripts')).force_encoding('BINARY'), 
+    send_data gz(tar(Rails.root.join('lib/assets/marina/scripts')).force_encoding('BINARY'),
               :filename => 'scripts.tar.gz',
               :type => "application/gzip",
-              :disposition => "attachment"
+              :disposition => "attachment")
   end
 
   def tar(path)
