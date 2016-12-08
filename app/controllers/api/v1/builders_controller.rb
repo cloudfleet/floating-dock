@@ -16,22 +16,26 @@ class Api::V1::BuildersController < ApiController
     @builder = Builder.find(params[:id])
     if request.headers["X-FLOATING-DOCK-BUILDER-KEY"] == @builder.auth_key
       @build = Build.reserve @builder
-      build_info = {
-        build: {
-          id: @build.id,
-          repository_url: @build.repository.source_code_url,
-          repository_branch: @build.repository_tag.reference,
-          docker_file_path: @build.repository_tag.docker_file_path,
-          image_name: "#{@build.repository.owner_name}/#{@build.repository.name}"
-        },
-        registry: {
-          host: Rails.configuration.x.marina.docker_registry_host,
-          user: Rails.configuration.x.marina.docker_registry_user,
-          password: Rails.configuration.x.marina.docker_registry_password,
-          email: Rails.configuration.x.marina.docker_registry_email
+      if @build
+        build_info = {
+          build: {
+            id: @build.id,
+            repository_url: @build.repository.source_code_url,
+            repository_branch: @build.repository_tag.reference,
+            docker_file_path: @build.repository_tag.docker_file_path,
+            image_name: "#{@build.repository.owner_name}/#{@build.repository.name}"
+          },
+          registry: {
+            host: Rails.configuration.x.marina.docker_registry_host,
+            user: Rails.configuration.x.marina.docker_registry_user,
+            password: Rails.configuration.x.marina.docker_registry_password,
+            email: Rails.configuration.x.marina.docker_registry_email
+          }
         }
-      }
-      render json: build_info
+        render json: build_info
+      else
+        render json: {}
+      end
     else
       render text: "Access Denied", status: :unauthorized
     end
