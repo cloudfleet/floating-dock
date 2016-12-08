@@ -15,7 +15,7 @@ class Api::V1::BuildersController < ApiController
   def request_build
     @builder = Builder.find(params[:id])
     if request.headers["X-FLOATING-DOCK-BUILDER-KEY"] == @builder.auth_key
-      @build = Build.request_build
+      @build = Build.reserve @builder
       build_info = {
         build: {
           id: @build.id,
