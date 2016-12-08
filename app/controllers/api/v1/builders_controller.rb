@@ -57,10 +57,19 @@ class Api::V1::BuildersController < ApiController
   end
 
   def get_scripts
-    send_data gz(tar(Rails.root.join('lib/assets/marina/scripts')).force_encoding('BINARY'),
-              :filename => 'scripts.tar.gz',
-              :type => "application/gzip",
-              :disposition => "attachment")
+
+    #gz_data =
+
+    #gz_data = gzip(tar(Rails.root.join('lib/assets/marina/scripts')))
+    #File.open('tmp/data.tar', 'w') do |f|
+    #  f.puts(gz_data.read)
+    #end
+
+    send_data ActiveSupport::Gzip.compress(tar(Rails.root.join('lib/assets/marina/scripts')).string),
+      :filename => 'scripts.tar.gz',
+      :type => "application/gzip",
+      :disposition => "attachment"
+
   end
 
   def tar(path)
@@ -83,19 +92,4 @@ class Api::V1::BuildersController < ApiController
     tarfile.rewind
     tarfile
   end
-
-  # gzips the underlying string in the given StringIO,
-  # returning a new StringIO representing the
-  # compressed file.
-  def gzip(tarfile)
-    gz = StringIO.new("")
-    z = Zlib::GzipWriter.new(gz)
-    z.write tarfile.string
-    z.close # this is necessary!
-
-    # z was closed to write the gzip footer, so
-    # now we need a new StringIO
-    StringIO.new gz.string
-  end
-
 end
