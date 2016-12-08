@@ -131,6 +131,7 @@ GEM
     rdoc (4.2.0)
     responders (2.1.1)
       railties (>= 4.2.0, < 5.1)
+    rubygems-update (2.6.8)
     rye (0.9.13)
       annoy
       docile (>= 1.0.1)
@@ -183,6 +184,7 @@ DEPENDENCIES
   rails (= 4.2.4)
   rails-api
   rails_12factor
+  rubygems-update
   rye
   sdoc (~> 0.4.0)
   sendgrid
