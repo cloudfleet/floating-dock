@@ -57,14 +57,45 @@ class Api::V1::BuildersController < ApiController
   end
 
   def get_scripts
+    send_data gz(tar(Rails.root.join('lib/assets/marina/scripts')).force_encoding('BINARY'), 
+              :filename => 'scripts.tar.gz',
+              :type => "application/gzip",
+              :disposition => "attachment"
+  end
 
-    prefix = 'scripts'
-    suffix = '.tar.gz'
-    f = Tempfile.new [prefix, suffix], Rails.root.join('tmp')
+  def tar(path)
+    tarfile = StringIO.new("")
+    Gem::Package::TarWriter.new(tarfile) do |tar|
+      Dir[File.join(path, "**/*")].each do |file|
+        mode = File.stat(file).mode
+        relative_file = file.sub /^#{Regexp::escape path}\/?/, ''
 
-    Minitar.pack(Rails.root.join('lib/assets/marina/scripts'), Zlib::GzipWriter.new(File.open(f, 'wb')))
+        if File.directory?(file)
+          tar.mkdir relative_file, mode
+        else
+          tar.add_file relative_file, mode do |tf|
+            File.open(file, "rb") { |f| tf.write f.read }
+          end
+        end
+      end
+    end
 
-    send_file f
+    tarfile.rewind
+    tarfile
+  end
+
+  # gzips the underlying string in the given StringIO,
+  # returning a new StringIO representing the
+  # compressed file.
+  def gzip(tarfile)
+    gz = StringIO.new("")
+    z = Zlib::GzipWriter.new(gz)
+    z.write tarfile.string
+    z.close # this is necessary!
+
+    # z was closed to write the gzip footer, so
+    # now we need a new StringIO
+    StringIO.new gz.string
   end
 
 end

@@ -18,8 +18,6 @@ gem 'cancancan', '~> 1.10'
 gem 'omniauth'
 gem 'pg'
 
-gem 'minitar', require: 'archive/tar/minitar'
-
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
