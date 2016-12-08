@@ -1,20 +1,20 @@
 #!/usr/bin/python
 
 import time
-import yaml
 import json
 import urllib2
 import urllib
 import sys
 import subprocess
 
-CONFIG_FILE = "/etc/floating-dock/builder/config.yml"
+CONFIG_FILE = "/etc/floating-dock/builder/config.json"
 
 def load_config():
     try:
         with open(CONFIG_FILE, "r") as config_file:
-            return yaml.safe_load(config_file)
-    except e:
+            return json.load(config_file)
+    except:
+        print "No config found."
         return None
 
 def register_builder(new_builder_key, builder_name, floating_dock_address):
@@ -26,20 +26,21 @@ def register_builder(new_builder_key, builder_name, floating_dock_address):
     data = urllib.urlencode(values)
     req = urllib2.Request(url, data)
     response = urllib2.urlopen(req)
+
     config = json.load(response)
 
     with open(CONFIG_FILE, "w+") as config_file:
-        yaml.safe_dump(config, config_file)
+        json.dump(config, config_file)
 
     return config
 
 def request_build(config, floating_dock_address):
-    url = "%s/api/v1/builders" % floating_dock_address
-    req = urllib2.Request(url, None, {"X-FLOATING-DOCK-BUILDER-KEY": config["key"]})
+    url = "%s/api/v1/builders/%s/request_build" % (floating_dock_address, config["id"])
+    req = urllib2.Request(url, urllib.urlencode({"post":"true"}), {"X-FLOATING-DOCK-BUILDER-KEY": config["auth_key"]})
     response = urllib2.urlopen(req)
     return json.load(response)
 
-def build_and_push(build_config):
+def build_and_push(build_config, config):
     build_script = os.path.dirname(os.path.abspath(__file__)) + "/build_and_push_docker_image.sh"
 
     p = subprocess.Popen([
@@ -64,14 +65,14 @@ def build_and_push(build_config):
         status = "failed"
 
     values = {
-        "build_id": build_config["build"]["id"]
+        "build_id": build_config["build"]["id"],
         "status": status,
         "stdout": stdout,
         "stderr": stderr
     }
     url = "%s/api/v1/builders" % floating_dock_address
     data = urllib.urlencode(values)
-    req = urllib2.Request(url, data)
+    req = urllib2.Request(url, data, {"X-FLOATING-DOCK-BUILDER-KEY": config["auth_key"]})
     response = urllib2.urlopen(req)
 
 
@@ -79,12 +80,13 @@ def main():
 
     floating_dock_address = sys.argv[1]
     new_builder_key = sys.argv[2]
+    builder_name = sys.argv[3]
 
     config = load_config()
 
     if not config:
         print("Registering builder ...")
-        config = register_builder(new_builder_key, builder_name)
+        config = register_builder(new_builder_key, builder_name, floating_dock_address)
         print("Registered.")
 
     while True:
@@ -93,6 +95,9 @@ def main():
 
         if new_build:
             print("Building")
-            build_and_push(new_build)
+            build_and_push(new_build, config)
         else:
             time.sleep(30)
+
+if  __name__ =='__main__':
+    main()
