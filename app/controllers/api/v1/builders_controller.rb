@@ -48,10 +48,10 @@ class Api::V1::BuildersController < ApiController
 
       @build.state = params[:status]
       if params[:stdout]
-        @build.stdout = params[:stdout]
+        @build.std_out = params[:stdout]
       end
       if params[:stderr]
-        @build.stderr = params[:stderr]
+        @build.std_err = params[:stderr]
       end
 
       render json: build_info
