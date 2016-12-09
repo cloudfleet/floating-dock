@@ -6,6 +6,7 @@ import urllib2
 import urllib
 import sys
 import subprocess
+import os
 
 CONFIG_FILE = "/etc/floating-dock/builder/config.json"
 
@@ -26,7 +27,6 @@ def register_builder(new_builder_key, builder_name, floating_dock_address):
     data = urllib.urlencode(values)
     req = urllib2.Request(url, data)
     response = urllib2.urlopen(req)
-
     config = json.load(response)
 
     with open(CONFIG_FILE, "w+") as config_file:
@@ -40,7 +40,7 @@ def request_build(config, floating_dock_address):
     response = urllib2.urlopen(req)
     return json.load(response)
 
-def build_and_push(build_config, config):
+def build_and_push(build_config, config, floating_dock_address):
     build_script = os.path.dirname(os.path.abspath(__file__)) + "/build_and_push_docker_image.sh"
 
     p = subprocess.Popen([
@@ -70,7 +70,7 @@ def build_and_push(build_config, config):
         "stdout": stdout,
         "stderr": stderr
     }
-    url = "%s/api/v1/builders" % floating_dock_address
+    url = "%s/api/v1/builders/%s/update_build" % (floating_dock_address, config["id"])
     data = urllib.urlencode(values)
     req = urllib2.Request(url, data, {"X-FLOATING-DOCK-BUILDER-KEY": config["auth_key"]})
     response = urllib2.urlopen(req)
@@ -81,7 +81,6 @@ def main():
     floating_dock_address = sys.argv[1]
     new_builder_key = sys.argv[2]
     builder_name = sys.argv[3]
-
     config = load_config()
 
     if not config:
@@ -96,12 +95,11 @@ def main():
 
             if new_build:
                 print("Building")
-                build_and_push(new_build, config)
+                build_and_push(new_build, config, floating_dock_address)
             else:
                 time.sleep(30)
-        except:
-            time.sleep(30)
-            pass
+        except Exception as detail:
+           print("Failed to build: %s" % detail)
 
 if  __name__ =='__main__':
     main()

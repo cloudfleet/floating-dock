@@ -33,6 +33,7 @@ Rails.application.routes.draw do
       resources :builders do
         member do
           post 'request_build'
+          post 'update_build'
         end
         collection do
           get 'scripts.tar.gz', to: 'builders#get_scripts'

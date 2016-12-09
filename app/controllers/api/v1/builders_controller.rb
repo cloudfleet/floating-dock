@@ -61,14 +61,6 @@ class Api::V1::BuildersController < ApiController
   end
 
   def get_scripts
-
-    #gz_data =
-
-    #gz_data = gzip(tar(Rails.root.join('lib/assets/marina/scripts')))
-    #File.open('tmp/data.tar', 'w') do |f|
-    #  f.puts(gz_data.read)
-    #end
-
     send_data ActiveSupport::Gzip.compress(tar(Rails.root.join('lib/assets/marina/scripts')).string),
       :filename => 'scripts.tar.gz',
       :type => "application/gzip",
