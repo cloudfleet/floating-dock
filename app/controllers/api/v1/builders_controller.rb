@@ -46,7 +46,7 @@ class Api::V1::BuildersController < ApiController
     if request.headers["X-FLOATING-DOCK-BUILDER-KEY"] == @builder.auth_key
       @build = Build.find(params[:build_id])
 
-      @build.status = params[:status]
+      @build.state = params[:status]
       if params[:stdout]
         @build.stdout = params[:stdout]
       end
