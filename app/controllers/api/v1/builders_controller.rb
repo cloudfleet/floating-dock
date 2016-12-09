@@ -54,7 +54,7 @@ class Api::V1::BuildersController < ApiController
         @build.std_err = params[:stderr]
       end
 
-      render json: build_info
+      render json: {}
     else
       render text: "Access Denied", status: :unauthorized
     end
