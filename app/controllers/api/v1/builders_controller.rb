@@ -53,6 +53,7 @@ class Api::V1::BuildersController < ApiController
       if params[:stderr]
         @build.std_err = params[:stderr]
       end
+      @build.save!
 
       render json: {}
     else
