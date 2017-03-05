@@ -43,8 +43,10 @@ Rails.application.routes.draw do
   end
 
 
-  get '/app', to: 'root#index'
-  get '/app/*path', to: 'root#index'
+  get '/', to: 'root#index'
+  get '/*path', to: 'root#index'
+
+
 
 
 end
