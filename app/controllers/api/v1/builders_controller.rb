@@ -30,6 +30,9 @@ class Api::V1::BuildersController < ApiController
             user: Rails.configuration.x.marina.docker_registry_user,
             password: Rails.configuration.x.marina.docker_registry_password,
             email: Rails.configuration.x.marina.docker_registry_email
+          },
+          library: {
+            arch: Rails.config.x.marina.docker_library_arch
           }
         }
         render json: build_info

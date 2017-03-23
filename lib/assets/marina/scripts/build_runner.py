@@ -41,7 +41,8 @@ def request_build(config, floating_dock_address):
     return json.load(response)
 
 def build_and_push(build_config, config, floating_dock_address):
-    build_script = os.path.dirname(os.path.abspath(__file__)) + "/build_and_push_docker_image.sh"
+    build_script = os.path.dirname(os.path.abspath(__file__)) + "/build_docker_image.sh"
+    push_script = os.path.dirname(os.path.abspath(__file__)) + "/push_docker_image.sh"
 
     p = subprocess.Popen([
         build_script,
@@ -50,9 +51,7 @@ def build_and_push(build_config, config, floating_dock_address):
         build_config["build"]["docker_file_path"],
         build_config["build"]["image_name"],
         build_config["registry"]["host"],
-        build_config["registry"]["user"],
-        build_config["registry"]["password"],
-        build_config["registry"]["email"]
+        build_config["library"]["arch"]
     ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     stdout, stderr = p.communicate()
@@ -60,7 +59,7 @@ def build_and_push(build_config, config, floating_dock_address):
     success = p.returncode == 0
 
     if success:
-        status = "pushed"
+        status = "built"
     else:
         status = "failed"
 
@@ -74,6 +73,34 @@ def build_and_push(build_config, config, floating_dock_address):
     data = urllib.urlencode(values)
     req = urllib2.Request(url, data, {"X-FLOATING-DOCK-BUILDER-KEY": config["auth_key"]})
     response = urllib2.urlopen(req)
+
+
+    p = subprocess.Popen([
+        push_script,
+        build_config["build"]["image_name"],
+        build_config["registry"]["host"],
+        build_config["registry"]["user"],
+        build_config["registry"]["password"],
+    ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    stdout, stderr = p.communicate()
+
+    success = p.returncode == 0
+
+    if success:
+        status = "pushed"
+    else:
+        status = "failed"
+
+    values = {
+        "build_id": build_config["build"]["id"],
+        "status": status
+    }
+    url = "%s/api/v1/builders/%s/update_build" % (floating_dock_address, config["id"])
+    data = urllib.urlencode(values)
+    req = urllib2.Request(url, data, {"X-FLOATING-DOCK-BUILDER-KEY": config["auth_key"]})
+    response = urllib2.urlopen(req)
+
 
 
 def main():

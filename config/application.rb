@@ -29,6 +29,7 @@ module App
     config.x.marina.docker_registry_user = ENV['DOCKER_REGISTRY_USER']
     config.x.marina.docker_registry_email = ENV['DOCKER_REGISTRY_EMAIL']
     config.x.marina.docker_registry_password = ENV['DOCKER_REGISTRY_PASSWORD']
+    config.x.marina.docker_library_arch = ENV['DOCKER_LIBRARY_ARCH']
 
     config.x.marina.new_builder_key = ENV['NEW_BUILDER_KEY']
 
