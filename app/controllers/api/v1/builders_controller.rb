@@ -32,7 +32,7 @@ class Api::V1::BuildersController < ApiController
             email: Rails.configuration.x.marina.docker_registry_email
           },
           library: {
-            arch: Rails.config.x.marina.docker_library_arch
+            arch: Rails.configuration.x.marina.docker_library_arch
           }
         }
         render json: build_info
