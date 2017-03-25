@@ -5,4 +5,8 @@ class RepositoryTag < ActiveRecord::Base
   def last_build
     builds.order(:end).last
   end
+
+  def build!
+    Build.create(repository_tag: self, start: DateTime.current, state: 'created')
+  end
 end

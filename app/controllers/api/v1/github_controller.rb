@@ -4,7 +4,7 @@ class Api::V1::GithubController < ApiController
 
   def push
     if @tag
-      @build = Build.create(repository_tag: @tag, start: DateTime.current, state: 'created')
+      @tag.build!
     else
       render json: '{"error": "not_found"}', status: :not_found
     end

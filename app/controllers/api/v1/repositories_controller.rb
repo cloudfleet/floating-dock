@@ -1,6 +1,6 @@
 class Api::V1::RepositoriesController < ApiController
 
-  before_action :set_repository, only: [:show, :edit, :update]
+  before_action :set_repository, only: [:show, :edit, :update, :build]
 
   def index
     if params[:namespace]
@@ -26,6 +26,14 @@ class Api::V1::RepositoriesController < ApiController
     authenticate_repository_write @repository, params
     @repository.update(repository_params)
     render json: @repository
+  end
+
+  def build
+    authenticate_repository_write @repository, params
+
+    @build = @repository.repository_tags.find(params[:tag_id]).build!
+    render json: @build
+
   end
 
   def set_repository

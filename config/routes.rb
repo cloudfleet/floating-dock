@@ -13,6 +13,7 @@ Rails.application.routes.draw do
         get '/:namespace/:name', to: 'repositories#show'
         put '/:namespace/:name', to: 'repositories#update'
         get '/:namespace/:repository/builds/:id/logs', to: 'builds#logs'
+        post '/:namespace/:repository/tags/:tag_id/build', to: 'repositories#build'
       end
       resources :namespaces, only: :show
       resources :organizations do
