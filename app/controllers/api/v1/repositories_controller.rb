@@ -61,8 +61,8 @@ class Api::V1::RepositoriesController < ApiController
   def authenticate_repository_write(repository, params)
     # on creation repository is nil
     (
-      (!repository || current_api_v1_user.available_namespaces.include?(repository.owner_name)) \
-      && \
+      (repository && current_api_v1_user.available_namespaces.include?(repository.owner_name)) \
+      || \
       current_api_v1_user.available_namespaces.include?(params[:owner_name]) \
     )
   end
