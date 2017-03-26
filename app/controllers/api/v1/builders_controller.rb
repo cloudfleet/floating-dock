@@ -52,7 +52,7 @@ class Api::V1::BuildersController < ApiController
         render json: {}
       end
     else
-      render text: "Access Denied", status: :unauthorized
+      render text: "forbidden", status: :forbidden
     end
   end
 

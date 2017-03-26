@@ -27,7 +27,7 @@ class Api::V1::GithubController < ApiController
     owner = User.find_by(name: namespace) || Organization.find_by(name: namespace)
     puts owner
     unless owner && owner.api_key == params[:api_key] && params[:namespace] == params[:repository][:owner][:name]
-      render text: 'Non authorized', status: :unauthorized
+      render text: 'forbidden', status: :forbidden
     end
   end
 

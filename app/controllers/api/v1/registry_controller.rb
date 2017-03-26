@@ -12,6 +12,8 @@ class Api::V1::RegistryController < ApiController
         user = User.find_by(name: username)
         if user.valid_password?(password) && user.available_namespaces.include?(params[:namespace])
           render text: 'ok'
+        else
+          render text: 'forbidden', status: :forbidden
         end
       }
     end
