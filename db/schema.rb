@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161201200010) do
+ActiveRecord::Schema.define(version: 20170326140001) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,8 +85,9 @@ ActiveRecord::Schema.define(version: 20161201200010) do
     t.string   "name"
     t.string   "reference"
     t.string   "docker_file_path"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.string   "additional_tags",  default: ""
   end
 
   add_index "repository_tags", ["repository_id"], name: "index_repository_tags_on_repository_id", using: :btree

@@ -33,7 +33,9 @@ class Api::V1::BuildersController < ApiController
             repository_url: @build.repository.source_code_url,
             repository_branch: @build.repository_tag.reference,
             docker_file_path: @build.repository_tag.docker_file_path,
-            image_name: "#{@build.repository.owner_name}/#{@build.repository.name}:#{@build.repository_tag.name}"
+            image_repository: "#{@build.repository.owner_name}/#{@build.repository.name}",
+            image_tag: @build.repository_tag.name},
+            image_additional_tags: @build.repository_tag.additional_tags
           },
           registry: {
             host: Rails.configuration.x.marina.docker_registry_host,
