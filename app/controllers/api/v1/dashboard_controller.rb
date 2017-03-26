@@ -13,12 +13,12 @@ class Api::V1::DashboardController < ApiController
 
     {
       build_count: {
-        total: repositories.map{|r| r.builds.count}.reduce(:+),
-        success: repositories.map{|r| r.builds.where(state: 'success').count}.reduce(:+),
-        pending: repositories.map{|r| r.builds.where(end: nil).count}.reduce(:+),
-        failure: repositories.map{|r| r.builds.where(state: 'failure').count}.reduce(:+)
+        total: repositories.map{|r| r.builds.count}.reduce(:+).to_i,
+        success: repositories.map{|r| r.builds.where(state: 'pushed').count}.reduce(:+).to_i,
+        pending: repositories.map{|r| r.builds.where(end: nil).count}.reduce(:+).to_i,
+        failure: repositories.map{|r| r.builds.where(state: 'failed').count}.reduce(:+).to_i
       },
-      tags_with_failure: repositories.collect(&:repository_tags).flatten.select{|rt| rt.last_build && rt.last_build.state == "failure"},
+      tags_with_failure: repositories.collect(&:repository_tags).flatten.select{|rt| rt.last_build && rt.last_build.state == "failed"},
       pending_builds: repositories.collect(&:builds).flatten.select{|b| b.end == nil}
     }
   end
