@@ -53,7 +53,8 @@ class Api::V1::RepositoriesController < ApiController
         :_destroy,
         :name,
         :reference,
-        :docker_file_path
+        :docker_file_path,
+        :additional_tags
       ]
     )
   end
