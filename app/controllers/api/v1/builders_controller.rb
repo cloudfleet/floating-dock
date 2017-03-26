@@ -34,7 +34,7 @@ class Api::V1::BuildersController < ApiController
             repository_branch: @build.repository_tag.reference,
             docker_file_path: @build.repository_tag.docker_file_path,
             image_repository: "#{@build.repository.owner_name}/#{@build.repository.name}",
-            image_tag: @build.repository_tag.name},
+            image_tag: @build.repository_tag.name,
             image_additional_tags: @build.repository_tag.additional_tags
           },
           registry: {
