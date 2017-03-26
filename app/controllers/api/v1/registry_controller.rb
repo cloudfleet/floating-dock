@@ -8,9 +8,9 @@ class Api::V1::RegistryController < ApiController
       render text: 'ok'
     else
 
-      authenticate_or_request_with_http_basic realm: 'marina.io' {|username, password|
+      authenticate_or_request_with_http_basic(realm: 'marina.io'){ |username, password|
         user = User.find_by(name: username)
-        if user.valid_password? password && user.available_namespaces.include? params[:namespace]
+        if user.valid_password?(password) && user.available_namespaces.include?(params[:namespace])
           render text: 'ok'
         end
       }

@@ -11,7 +11,7 @@ import urllib2
 pattern = re.compile('^from (.*)$', re.IGNORECASE | re.MULTILINE)
 
 
-def do_build(repository_url, image_name, image_tag, registry, library_arch, repository_branch='master', dockerfile_path='/', image_additional_tags=''): 
+def do_build(repository_url, image_name, image_tag, registry, library_arch, repository_branch='master', dockerfile_path='/', image_additional_tags=''):
 
   print("Creating working directory ...")
   working_directory = tempfile.mkdtemp()
@@ -20,11 +20,12 @@ def do_build(repository_url, image_name, image_tag, registry, library_arch, repo
   print("Building image: %s" % image_name)
   print("------------------------------")
   print(" - fetching %s (%s) to %s" % (repository_url, repository_branch, working_directory))
-  subprocess.call(['git', 'clone', '--depth=1', '--branch', repository_branch, repository_url, working_directory])
-  
+  subprocess.call(['git', 'clone', repository_url, working_directory])
+  subprocess.Popen(['git', 'checkout', repository_branch], cwd=working_directory).communicate()
+
 
   print(" - patching Dockerfile")
-  
+
   with open("%s/%sDockerfile" % (working_directory, dockerfile_path), "r+") as dockerfile:
     dockerfile_content = dockerfile.read()
     parent_image = pattern.findall(dockerfile_content)[0]
@@ -40,9 +41,9 @@ def do_build(repository_url, image_name, image_tag, registry, library_arch, repo
         patched_parent_image = "%s/%s" % (registry, parent_image)
     else:
       patched_parent_image = "%s/%s" % (registry, parent_image) # TODO accomodate origins from other thirdparty registries
-    
+
     print("   - Patched parent image: %s" % patched_parent_image)
-    
+
     print(dockerfile_content)
     patched_dockerfile_content = dockerfile_content.replace(parent_image, patched_parent_image)
 
@@ -81,4 +82,3 @@ def main():
 
 if  __name__ =='__main__':
     main()
-
