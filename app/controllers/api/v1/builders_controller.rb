@@ -15,6 +15,16 @@ class Api::V1::BuildersController < ApiController
   def request_build
     @builder = Builder.find(params[:id])
     if request.headers["X-FLOATING-DOCK-BUILDER-KEY"] == @builder.auth_key
+
+      @builder.builds.where(end: nil).each do |build|
+        build.end = DateTime.current
+        if build.state != 'pushed'
+          build.state = 'failed'
+        end
+        build.save
+      end
+
+
       @build = Build.reserve @builder
       if @build
         build_info = {
@@ -56,6 +66,8 @@ class Api::V1::BuildersController < ApiController
       if params[:stderr]
         @build.std_err = params[:stderr]
       end
+      if @build.state = 'pushed' or @build.state = 'failed'
+        @build.end = DateTime.current
       @build.save!
 
       render json: {}
