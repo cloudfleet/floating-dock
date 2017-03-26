@@ -66,7 +66,7 @@ class Api::V1::BuildersController < ApiController
       if params[:stderr]
         @build.std_err = params[:stderr]
       end
-      if @build.state = 'pushed' or @build.state = 'failed'
+      if @build.state == 'pushed' or @build.state == 'failed'
         @build.end = DateTime.current
       end
       @build.save!
