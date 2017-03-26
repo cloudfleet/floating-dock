@@ -5,6 +5,7 @@ Rails.application.routes.draw do
         token_validations:  'overrides/token_validations',
         sessions:  'overrides/sessions'
       }
+      match 'registry_auth/v2/:namespace/:name/*path', to: 'registry#auth', via: :all
       get '/dashboard', to: 'dashboard#show'
       scope :repos do
         get '/', to: 'repositories#index'
