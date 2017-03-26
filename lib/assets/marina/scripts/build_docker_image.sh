@@ -23,14 +23,9 @@ cd $WORK_DIR/$DOCKERFILE_PATH
 echo " - patching Dockerfile"
 PARENT_IMAGE=$(grep -i "^from" Dockerfile | awk '{print $2}')
 
-echo $PARENT_IMAGE | grep "library"
-LIBRARY_PREFIXED=$?
-echo $PARENT_IMAGE | grep -v "/"
-NO_PREFIX=$?
-
-if [ $LIBRARY_PREFIXED -eq 0 ] ; then
-  sed -ri "s/^FROM\ library/^FROM\ $LIBRARY_ARCH/g" Dockerfile
-elif [ $NO_PREFIX -eq 0 ] ; then
+if (echo $PARENT_IMAGE | grep "library") ; then
+  sed -ri "s/^FROM\ library/FROM\ $LIBRARY_ARCH/g" Dockerfile
+elif (echo $PARENT_IMAGE | grep -v "/") ; then
   sed -ri "s/FROM\ (.*)/FROM\ $LIBRARY_ARCH\/\1/g" Dockerfile
 else
   sed -ri "s/FROM\ (.*)/FROM\ $REGISTRY\/\1/g" Dockerfile

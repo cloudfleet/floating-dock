@@ -41,15 +41,26 @@ def request_build(config, floating_dock_address):
     return json.load(response)
 
 def build_and_push(build_config, config, floating_dock_address):
-    build_script = os.path.dirname(os.path.abspath(__file__)) + "/build_docker_image.sh"
+
+    print("Building image with following configuration:")
+    print("============================================")
+    print(json.dumps(build_config, indent=2))
+    print("============================================") 
+
+    build_script = os.path.dirname(os.path.abspath(__file__)) + "/build_docker_image.py"
     push_script = os.path.dirname(os.path.abspath(__file__)) + "/push_docker_image.sh"
 
+    print("Building")
     p = subprocess.Popen([
+        'python',
+        '-u',
         build_script,
         build_config["build"]["repository_url"],
         build_config["build"]["repository_branch"],
         build_config["build"]["docker_file_path"],
-        build_config["build"]["image_name"],
+        build_config["build"]["image_repository"],
+        build_config["build"]["image_tag"],
+        build_config["build"]["image_additional_tags"],
         build_config["registry"]["host"],
         build_config["library"]["arch"]
     ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -57,11 +68,15 @@ def build_and_push(build_config, config, floating_dock_address):
     stdout, stderr = p.communicate()
 
     success = p.returncode == 0
-
+    
+    print(p.returncode)
+    
     if success:
         status = "built"
     else:
         status = "failed"
+
+    print("Status: %s" % status)
 
     values = {
         "build_id": build_config["build"]["id"],
@@ -74,10 +89,13 @@ def build_and_push(build_config, config, floating_dock_address):
     req = urllib2.Request(url, data, {"X-FLOATING-DOCK-BUILDER-KEY": config["auth_key"]})
     response = urllib2.urlopen(req)
 
+    if not success:
+      return
 
+    print("Pushing")
     p = subprocess.Popen([
         push_script,
-        build_config["build"]["image_name"],
+        build_config["build"]["image_repository"],
         build_config["registry"]["host"],
         build_config["registry"]["user"],
         build_config["registry"]["password"],
@@ -85,12 +103,19 @@ def build_and_push(build_config, config, floating_dock_address):
 
     stdout, stderr = p.communicate()
 
+    print(stdout)
+    print(stderr)
+    
+
+
     success = p.returncode == 0
 
     if success:
         status = "pushed"
     else:
         status = "failed"
+
+    print("Status: %s" % status)
 
     values = {
         "build_id": build_config["build"]["id"],
@@ -121,7 +146,6 @@ def main():
             new_build = request_build(config, floating_dock_address)
 
             if new_build:
-                print("Building")
                 build_and_push(new_build, config, floating_dock_address)
             else:
                 time.sleep(30)
