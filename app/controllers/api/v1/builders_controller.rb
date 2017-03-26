@@ -68,6 +68,7 @@ class Api::V1::BuildersController < ApiController
       end
       if @build.state = 'pushed' or @build.state = 'failed'
         @build.end = DateTime.current
+      end
       @build.save!
 
       render json: {}
