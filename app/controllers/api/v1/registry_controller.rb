@@ -1,5 +1,6 @@
 class Api::V1::RegistryController < ApiController
   include ActionController::HttpAuthentication::Basic::ControllerMethods
+  include ActionController::HttpAuthentication::Basic
 
   def auth
 
@@ -11,25 +12,29 @@ class Api::V1::RegistryController < ApiController
     else
 
       authenticate_or_request_with_http_basic do |username, password|
-        user = User.find_by(name: username)
-        if username == 'testuser' || (user && user.valid_password?(password) && user.available_namespaces.include?(params[:namespace]))
-          render text: 'ok'
-        else
-          render text: 'forbidden', status: :forbidden
-        end
+        authenticate(username, password)
       end
     end
   end
 
   def login
-    render text: 'ok'
-    # authenticate_or_request_with_http_basic do |username, password|
-    #   user = User.find_by(name: username)
-    #   if username == 'testuser' || (user.valid_password?(password) && user.available_namespaces.include?(params[:namespace]))
-    #     render text: 'ok'
-    #   else
-    #     render text: 'forbidden', status: :forbidden
-    #   end
-    # end
+    if has_basic_credentials?(request)
+      authenticate(request) do |username, password|
+        authenticate(username, password)
+      end
+    else
+      render text: 'ok'
+    end
+  end
+
+  private
+
+  def authenticate(username, password)
+    user = User.find_by(name: username)
+    if username == 'testuser' || (user && user.valid_password?(password) && user.available_namespaces.include?(params[:namespace]))
+      render text: 'ok'
+    else
+      render text: 'forbidden', status: :forbidden
+    end
   end
 end
