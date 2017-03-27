@@ -19,9 +19,7 @@ class Api::V1::RegistryController < ApiController
 
   def login
     if has_basic_credentials?(request)
-      authenticate(request) do |username, password|
-        authenticate(username, password)
-      end
+      authenticate(*user_name_and_password(request))
     else
       render text: 'ok'
     end
@@ -30,6 +28,7 @@ class Api::V1::RegistryController < ApiController
   private
 
   def authenticate(username, password)
+    puts "Authenticating user #{username} with #{password}"
     user = User.find_by(name: username)
     if username == 'testuser' || (user && user.valid_password?(password) && user.available_namespaces.include?(params[:namespace]))
       render text: 'ok'
