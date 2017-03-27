@@ -41,7 +41,6 @@ class Api::V1::BuildersController < ApiController
             host: Rails.configuration.x.marina.docker_registry_host,
             user: Rails.configuration.x.marina.docker_registry_user,
             password: Rails.configuration.x.marina.docker_registry_password,
-            email: Rails.configuration.x.marina.docker_registry_email
           },
           library: {
             arch: Rails.configuration.x.marina.docker_library_arch

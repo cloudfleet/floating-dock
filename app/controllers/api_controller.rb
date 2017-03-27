@@ -12,6 +12,10 @@ class ApiController < ActionController::API
     @current_ability ||= Ability.new(current_api_v1_user)
   end
 
+  def current_user
+    current_api_v1_user
+  end
+
   def cors_set_access_control_headers
     headers['Access-Control-Allow-Origin'] = '*'
     headers['Access-Control-Allow-Methods'] = 'POST, GET, PUT, DELETE, OPTIONS'

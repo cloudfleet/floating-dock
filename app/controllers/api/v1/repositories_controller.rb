@@ -1,6 +1,8 @@
 class Api::V1::RepositoriesController < ApiController
 
-  before_action :set_repository, only: [:show, :edit, :update, :build]
+  before_action :set_repository, only: [:show]
+  before_action :set_and_authenticate_repository, only: [:edit, :update, :build]
+  before_action :authenticate_namespace, only: [:create]
 
   def index
     if params[:namespace]
@@ -17,7 +19,6 @@ class Api::V1::RepositoriesController < ApiController
   end
 
   def create
-    authenticate_repository_write @repository, params
     Repository.create(repository_params)
     render json: @repository
   end
@@ -36,8 +37,19 @@ class Api::V1::RepositoriesController < ApiController
 
   end
 
+  private
+
   def set_repository
     @repository = Repository.find_by(owner_name: params[:namespace], name: params[:name])
+  end
+
+  def set_and_authenticate_repository
+    set_repository
+    can?(current_user, :update, @repository)
+  end
+
+  def authenticate_namespace
+    current_user.available_namespaces.include? params[:owner_name]
   end
 
   def repository_params
@@ -59,13 +71,5 @@ class Api::V1::RepositoriesController < ApiController
     )
   end
 
-  def authenticate_repository_write(repository, params)
-    # on creation repository is nil
-    (
-      (repository && current_api_v1_user.available_namespaces.include?(repository.owner_name)) \
-      || \
-      current_api_v1_user.available_namespaces.include?(params[:owner_name]) \
-    )
-  end
 
 end
