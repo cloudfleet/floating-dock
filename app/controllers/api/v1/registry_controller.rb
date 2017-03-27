@@ -2,6 +2,9 @@ class Api::V1::RegistryController < ApiController
   include ActionController::HttpAuthentication::Basic::ControllerMethods
 
   def auth
+
+    puts user_name_and_password(request)
+
     @repository = Repository.find_by(owner_name: params[:namespace], name: params[:name])
 
     if ['GET', 'HEAD'].include?(params[:method])
