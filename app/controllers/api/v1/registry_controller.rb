@@ -1,4 +1,5 @@
 class Api::V1::RegistryController < ApiController
+  include ActionController::HttpAuthentication
 
   def auth
     @repository = Repository.find_by(owner_name: params[:namespace], name: params[:name])
