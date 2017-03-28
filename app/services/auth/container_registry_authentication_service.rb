@@ -1,8 +1,15 @@
 module Auth
   class ContainerRegistryAuthenticationService < BaseService
 
+    attr_accessor :project, :current_user, :params
+
     AUDIENCE = 'container_registry'.freeze
     ISSUER = 'floating-dock'.freeze
+
+    def initialize(user, params = {})
+      @current_user, @params = project, user, params.dup
+    end
+
 
     def execute
 
