@@ -25,6 +25,14 @@ class JwtController < ApiController
     end
   end
 
+  def authenticate(username, password)
+
+    if (user = User.find_by(name: username)) && user.valid_password?(password)
+      user
+    end
+  end
+
+
 
   def auth_params
     params.permit(:service, :scope, :account, :client_id)
