@@ -7,7 +7,7 @@ module Auth
     ISSUER = 'floating-dock'.freeze
 
     def initialize(user, params = {})
-      @current_user, @params = project, user, params.dup
+      @current_user, @params = user, params.dup
     end
 
 
