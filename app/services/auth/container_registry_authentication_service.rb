@@ -1,5 +1,5 @@
 module Auth
-  class ContainerRegistryAuthenticationService < BaseService
+  class ContainerRegistryAuthenticationService
 
     attr_accessor :project, :current_user, :params
 
