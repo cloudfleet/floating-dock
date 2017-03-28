@@ -21,7 +21,8 @@ module Auth
     end
 
     def self.full_access_token(*names)
-      puts Rails.configuration.x.marina.docker_registry_jwt_key
+      puts "Key Path Env Variable:  #{ENV['DOCKER_REGISTRY_JWT_KEY']}"
+      puts "Key Path:  #{Rails.configuration.x.marina.docker_registry_jwt_key}"
       token = JSONWebToken::RSAToken.new(Rails.configuration.x.marina.docker_registry_jwt_key)
       token.issuer = ISSUER
       token.audience = AUDIENCE
