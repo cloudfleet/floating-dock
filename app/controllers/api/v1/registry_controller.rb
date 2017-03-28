@@ -46,7 +46,7 @@ class Api::V1::RegistryController < ApiController
     logger.warn "*** FULL PATH ***"
     logger.warn self.request.fullpath
     logger.warn "*** RAW HEADERS ***"
-    self.request.env.each do |header|
+    self.request.env.select {|k,v| k =~ /^HTTP_/}.each do |header|
       logger.warn "HEADER KEY: #{header[0]}"
       logger.warn "HEADER VAL: #{header[1]}"
     end
