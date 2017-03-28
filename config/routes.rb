@@ -9,6 +9,8 @@ Rails.application.routes.draw do
       match 'registry_auth/:method/v1/repositories:namespace/:name/*path', to: 'registry#auth', via: :all
       get 'registry_auth/GET/v2/', to: 'registry#login'
       get 'registry_auth/GET/v1/_ping', to: 'registry#login'
+      get 'jwt', to: 'jwt#auth'
+
       get '/dashboard', to: 'dashboard#show'
       scope :repos do
         get '/', to: 'repositories#index'
