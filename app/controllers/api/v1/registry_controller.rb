@@ -8,7 +8,7 @@ class Api::V1::RegistryController < ApiController
 
     @repository = Repository.find_by(owner_name: params[:namespace], name: params[:name])
 
-    if ['GET'].include?(params[:method])
+    if ['GET', 'HEAD'].include?(params[:method])
       puts "Fetching is always ok for now ..."
       render text: 'ok'
     else
