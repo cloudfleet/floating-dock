@@ -1,7 +1,7 @@
 class JwtController < ApiController
   include ActionController::HttpAuthentication::Basic::ControllerMethods
   include ActionController::HttpAuthentication::Basic
-  before_action :authenticate_user
+  # before_action :authenticate_user
 
   SERVICES = {
     Auth::ContainerRegistryAuthenticationService::AUDIENCE => Auth::ContainerRegistryAuthenticationService,
