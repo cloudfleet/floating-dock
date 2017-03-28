@@ -18,6 +18,7 @@ module JSONWebToken
 
     def key_data
       @key_data ||= File.read(key_file)
+      puts @key_data
     end
 
     def key
