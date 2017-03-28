@@ -20,14 +20,14 @@ class Api::V1::RegistryController < ApiController
   end
 
   def login
-    authenticate_or_request_with_http_basic do |username, password|
-      authenticate(username, password)
+    #authenticate_or_request_with_http_basic do |username, password|
+    #  authenticate(username, password)
+    #end
+    if has_basic_credentials?(request)
+      authenticate(*user_name_and_password(request))
+    else
+      render text: 'ok'
     end
-    # if has_basic_credentials?(request)
-    #   authenticate(*user_name_and_password(request))
-    # else
-    #   render text: 'ok'
-    # end
   end
 
   private
