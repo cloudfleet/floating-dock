@@ -18,6 +18,7 @@ gem 'cancancan', '~> 1.10'
 gem 'omniauth'
 gem 'json-jwt'
 gem 'jwt'
+gem 'base32', '~> 0.3.0'
 gem 'pg'
 
 gem 'rubygems-update', require: 'rubygems/package'
