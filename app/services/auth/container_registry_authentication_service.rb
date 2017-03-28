@@ -21,6 +21,7 @@ module Auth
     end
 
     def self.full_access_token(*names)
+      puts Rails.configuration.x.marina.docker_registry_jwt_key
       token = JSONWebToken::RSAToken.new(Rails.configuration.x.marina.docker_registry_jwt_key)
       token.issuer = ISSUER
       token.audience = AUDIENCE
