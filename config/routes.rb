@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'jwt', to: 'jwt#auth'
   namespace :api do
     namespace :v1 do
       mount_devise_token_auth_for 'User', at: 'auth', skip: [:omniauth_callbacks], controllers: {
@@ -9,7 +10,6 @@ Rails.application.routes.draw do
       match 'registry_auth/:method/v1/repositories:namespace/:name/*path', to: 'registry#auth', via: :all
       get 'registry_auth/GET/v2/', to: 'registry#login'
       get 'registry_auth/GET/v1/_ping', to: 'registry#login'
-      get 'jwt', to: 'jwt#auth'
 
       get '/dashboard', to: 'dashboard#show'
       scope :repos do
