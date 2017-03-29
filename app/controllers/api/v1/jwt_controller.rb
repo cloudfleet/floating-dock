@@ -21,7 +21,6 @@ class JwtController < ApiController
   def try_authenticate_user
     if has_basic_credentials?(request)
       authenticate(*user_name_and_password(request))
-      current_user
     end
   end
 
