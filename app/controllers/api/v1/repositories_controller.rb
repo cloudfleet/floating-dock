@@ -24,14 +24,11 @@ class Api::V1::RepositoriesController < ApiController
   end
 
   def update
-    authenticate_repository_write @repository, params
     @repository.update(repository_params)
     render json: @repository
   end
 
   def build
-    authenticate_repository_write @repository, params
-
     @build = @repository.repository_tags.find(params[:tag_id]).build!
     render json: @build
 
