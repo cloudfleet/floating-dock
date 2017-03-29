@@ -38,9 +38,7 @@ class Api::V1::BuildersController < ApiController
             image_additional_tags: @build.repository_tag.additional_tags
           },
           registry: {
-            host: Rails.configuration.x.marina.docker_registry_host,
-            user: Rails.configuration.x.marina.docker_registry_user,
-            password: Rails.configuration.x.marina.docker_registry_password,
+            host: Rails.configuration.x.marina.docker_registry_host
           },
           library: {
             arch: Rails.configuration.x.marina.docker_library_arch
