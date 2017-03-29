@@ -1,7 +1,7 @@
 module Auth
   class ContainerRegistryAuthenticationService
 
-    attr_accessor :project, :current_user, :params
+    attr_accessor :current_user, :params
 
     AUDIENCE = 'container_registry'.freeze
     ISSUER = 'floating-dock'.freeze
@@ -13,7 +13,7 @@ module Auth
 
     def execute
 
-      unless scope || current_user || repository
+      unless scope || current_user
         return error('DENIED', status: 403, message: 'access forbidden')
       end
 
