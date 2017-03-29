@@ -87,11 +87,11 @@ module Auth
     end
 
     def user_can_pull?(repository)
-      repository.public? || Ability.allowed?(current_user, :read, repository)
+      repository.public? || (current_user && current_user.can?(:read, repository))
     end
 
     def user_can_push?(repository)
-      Ability.allowed?(current_user, :update, repository)
+      (current_user && current_user.can?(:update, repository))
     end
 
     def error(code, status:, message: '')
