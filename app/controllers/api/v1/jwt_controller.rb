@@ -26,9 +26,12 @@ class JwtController < ApiController
 
   def authenticate(username, password)
 
-    if (user = User.find_by(name: username)) && user.valid_password?(password)
+    if (user = User.find_by(name: username) || User.find_by(email: username)) && user.valid_password?(password)
       user
+    elsif (builder = Builder.find(username)) && password == @builder.auth_key
+      builder
     end
+
   end
 
 
