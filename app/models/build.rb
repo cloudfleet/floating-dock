@@ -11,9 +11,6 @@ class Build < ActiveRecord::Base
     end
   end
 
-  def can?(action, object)
-    [:update, :read].include?(action) && object.is_a?(Repository)
-  end
 
 
   private
