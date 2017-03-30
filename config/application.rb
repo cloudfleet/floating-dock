@@ -35,7 +35,7 @@ module App
 
     config.x.marina.new_builder_key = ENV['NEW_BUILDER_KEY']
 
-    config.action_mailer.default_url_options[:host] = 'https://marina.io'
+    config.action_mailer.default_url_options = {host: 'https://marina.io'}
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
       address:              ENV['MAIL_HOST'],
