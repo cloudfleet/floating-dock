@@ -26,6 +26,7 @@ Rails.application.routes.draw do
         member do
           get 'show_api_key'
           post 'generate_api_key'
+          post 'add_user'
         end
       end
       resources :users, only: :show do

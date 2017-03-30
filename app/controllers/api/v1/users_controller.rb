@@ -16,8 +16,16 @@ class Api::V1::UsersController < ApiController
     render json: {result: 'success'}
   end
 
+  def names
+    render json: User.select(:name).map(&:name)
+  end
+
+  private
+
   def user_params
     params.require(:name)
   end
+
+
 
 end
