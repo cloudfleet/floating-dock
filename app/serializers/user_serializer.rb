@@ -1,5 +1,5 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :name, :organizations
+  attributes :name, :id, :organizations
 
   def organizations
     object.organization_users.map do |ou|
