@@ -3,14 +3,8 @@ class UserSerializer < ActiveModel::Serializer
 
   def organizations
     object.organization_users.map do |ou|
-      {role: ou.role, name: ou.organization.name}
+      {role: ou.role, name: ou.organization.name, id: ou.organization.id}
     end
   end
 
-  class OrganizationUserSerializer < ActiveModel::Serializer
-    attributes :name, :role
-    def name
-      object.organization.name
-    end
-  end
 end

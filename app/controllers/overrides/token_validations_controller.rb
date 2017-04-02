@@ -5,7 +5,7 @@ module Overrides
       # @resource will have been set by set_user_by_token concern
       if @resource
         render json: {
-          data: @resource.as_json(methods: :organizations),
+          data: UserSerializer.new(@resource).as_json,
           success: true
         }
       else
