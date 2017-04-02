@@ -34,6 +34,9 @@ Rails.application.routes.draw do
           get 'show_api_key'
           post 'generate_api_key'
         end
+        collection do
+          get 'names'
+        end
       end
       scope :github do
         post '/pushes/:namespace/:api_key', to: 'github#push'

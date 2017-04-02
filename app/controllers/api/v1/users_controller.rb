@@ -17,7 +17,8 @@ class Api::V1::UsersController < ApiController
   end
 
   def names
-    render json: User.select(:name).map(&:name)
+    fragment = params[:query]
+    render json: User.select(:name).map(&:name).filter{|name| name.downcase.start_with? fragment.downcase}
   end
 
   private
