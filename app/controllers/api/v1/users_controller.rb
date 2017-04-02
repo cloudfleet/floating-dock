@@ -18,7 +18,11 @@ class Api::V1::UsersController < ApiController
 
   def names
     fragment = params[:query]
-    render json: User.select(:name).map(&:name).filter{|name| name.downcase.start_with? fragment.downcase}
+    if fragment && fragment.length >= 2
+      render json: User.select(:name).map(&:name).select{|name| name.downcase.start_with? fragment.downcase}
+    else
+      render json: []
+    end
   end
 
   private
