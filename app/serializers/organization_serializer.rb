@@ -1,5 +1,5 @@
 class OrganizationSerializer < ActiveModel::Serializer
-  attributes :name, :api_key, :id
+  attributes :name, :api_key, :id, :members
 
   def members
     object.organization_users.map do |ou|
