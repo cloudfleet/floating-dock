@@ -1,4 +1,4 @@
-FROM rails:4.2
+FROM library/rails:4.2
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
