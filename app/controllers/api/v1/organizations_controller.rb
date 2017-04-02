@@ -31,8 +31,10 @@ class Api::V1::OrganizationsController < ApiController
 
   def add_user
     user_to_add = User.find_by(name: params[:name])
-    role = :admin # For now all members of an org are admins
-    @organization.organization_users.create(user: user_to_add, role: :admin)
+    if !@organization.users.include? user_to_add
+      role = :admin # For now all members of an org are admins
+      @organization.organization_users.create(user: user_to_add, role: role)
+    end
   end
 
   def organization_params
