@@ -37,6 +37,11 @@ class Api::V1::OrganizationsController < ApiController
     end
   end
 
+  def remove_user
+    OrganizationUser.find_by(user_id: params[:user_id], organization: @organization).destroy!
+  end
+
+
   def organization_params
     params.permit(:name)
   end
