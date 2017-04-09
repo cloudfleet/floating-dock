@@ -97,8 +97,8 @@ def build_and_push(build_config, config, floating_dock_address):
         push_script,
         build_config["build"]["image_repository"],
         build_config["registry"]["host"],
-        build_config["registry"]["user"],
-        build_config["registry"]["password"],
+        str(config["id"]),
+        config["auth_key"],
     ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     stdout, stderr = p.communicate()

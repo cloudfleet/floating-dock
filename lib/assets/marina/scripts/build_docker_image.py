@@ -11,7 +11,7 @@ import urllib2
 pattern = re.compile('^from (.*)$', re.IGNORECASE | re.MULTILINE)
 
 
-def do_build(repository_url, image_name, image_tag, registry, library_arch, repository_branch='master', dockerfile_path='/', image_additional_tags=''):
+def do_build(repository_url, image_name, image_tag, registry, library_arch, repository_branch='master', dockerfile_path='/', image_additional_tags=''): 
 
   print("Creating working directory ...")
   working_directory = tempfile.mkdtemp()
@@ -20,13 +20,17 @@ def do_build(repository_url, image_name, image_tag, registry, library_arch, repo
   print("Building image: %s" % image_name)
   print("------------------------------")
   print(" - fetching %s (%s) to %s" % (repository_url, repository_branch, working_directory))
-  subprocess.call(['git', 'clone', repository_url, working_directory])
-  subprocess.Popen(['git', 'checkout', repository_branch], cwd=working_directory).communicate()
-
+  response_code = subprocess.call(['git', 'clone', repository_url, working_directory])
+  if response_code != 0:
+    sys.exit(response_code)
+  p = subprocess.Popen(['git', 'checkout', repository_branch], cwd=working_directory)
+  p.communicate()
+  if p.returncode != 0:
+    sys.exit(p.returncode) 
 
   print(" - patching Dockerfile")
-
-  with open("%s/%sDockerfile" % (working_directory, dockerfile_path), "r+") as dockerfile:
+  
+  with open("%s/%s/Dockerfile" % (working_directory, dockerfile_path), "r+") as dockerfile:
     dockerfile_content = dockerfile.read()
     parent_image = pattern.findall(dockerfile_content)[0]
     print("   - Parent Image Original: %s" % parent_image)
@@ -41,15 +45,12 @@ def do_build(repository_url, image_name, image_tag, registry, library_arch, repo
         patched_parent_image = "%s/%s" % (registry, parent_image)
     else:
       patched_parent_image = "%s/%s" % (registry, parent_image) # TODO accomodate origins from other thirdparty registries
-
+    
     print("   - Patched parent image: %s" % patched_parent_image)
-
-    print(dockerfile_content)
+    
     patched_dockerfile_content = dockerfile_content.replace(parent_image, patched_parent_image)
 
-    print(patched_dockerfile_content)
-
-  with open("%s/%sDockerfile" % (working_directory, dockerfile_path), "w") as dockerfile:
+  with open("%s/%s/Dockerfile" % (working_directory, dockerfile_path), "w") as dockerfile:
     dockerfile.write(patched_dockerfile_content)
 
 
@@ -59,10 +60,12 @@ def do_build(repository_url, image_name, image_tag, registry, library_arch, repo
     sys.exit(response_code)
   print(" - image built")
   for tag in image_additional_tags.split(','):
-    print(" - tagging as %s/%s:%s" % (registry,image_name,tag))
-    subprocess.call(['docker', 'tag', '%s/%s:%s' % (registry,image_name,image_tag), '%s/%s:%s' % (registry,image_name,tag)])
-    if response_code != 0:
-      sys.exit(response_code)
+    tag = tag.strip()
+    if tag:
+      print(" - tagging as %s/%s:%s" % (registry,image_name,tag))
+      subprocess.call(['docker', 'tag', '%s/%s:%s' % (registry,image_name,image_tag), '%s/%s:%s' % (registry,image_name,tag)])
+      if response_code != 0:
+        sys.exit(response_code)
 
   subprocess.call(['rm', '-rf', working_directory])
 
@@ -82,3 +85,4 @@ def main():
 
 if  __name__ =='__main__':
     main()
+
