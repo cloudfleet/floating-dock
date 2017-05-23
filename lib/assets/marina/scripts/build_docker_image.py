@@ -49,6 +49,7 @@ def do_build(repository_url, image_name, image_tag, registry, library_arch, repo
                 )['results']
                 ]
         if unqualified_parent_tag in tag_list:
+            print("   - found %s for %s in official %s images." % (unqualified_parent_tag, unqualified_parent_repository, library_arch))
             patched_parent_image = "%s/%s" % (library_arch, unqualified_parent_image)
         else:
             patched_parent_image = "%s/%s" % (registry, parent_image)
