@@ -18,10 +18,11 @@ def load_config():
         print "No config found."
         return None
 
-def register_builder(new_builder_key, builder_name, floating_dock_address):
+def register_builder(new_builder_key, builder_name, floating_dock_address, architecture):
     values = {
         "key": new_builder_key,
-        "name": builder_name
+        "name": builder_name,
+        "architecture": architecture
     }
     url = "%s/api/v1/builders" % floating_dock_address
     data = urllib.urlencode(values)
@@ -45,7 +46,7 @@ def build_and_push(build_config, config, floating_dock_address):
     print("Building image with following configuration:")
     print("============================================")
     print(json.dumps(build_config, indent=2))
-    print("============================================") 
+    print("============================================")
 
     build_script = os.path.dirname(os.path.abspath(__file__)) + "/build_docker_image.py"
     push_script = os.path.dirname(os.path.abspath(__file__)) + "/push_docker_image.sh"
@@ -68,9 +69,9 @@ def build_and_push(build_config, config, floating_dock_address):
     stdout, stderr = p.communicate()
 
     success = p.returncode == 0
-    
+
     print(p.returncode)
-    
+
     if success:
         status = "built"
     else:
@@ -96,7 +97,7 @@ def build_and_push(build_config, config, floating_dock_address):
     p = subprocess.Popen([
         push_script,
         build_config["build"]["image_repository"],
-        build_config["registry"]["host"],
+        "%s.%s" % (build_config["library"]["arch"], build_config["registry"]["host"]),
         str(config["id"]),
         config["auth_key"],
     ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -105,7 +106,7 @@ def build_and_push(build_config, config, floating_dock_address):
 
     print(stdout)
     print(stderr)
-    
+
 
 
     success = p.returncode == 0
@@ -133,11 +134,12 @@ def main():
     floating_dock_address = sys.argv[1]
     new_builder_key = sys.argv[2]
     builder_name = sys.argv[3]
+    architecture = sys.argv[4]
     config = load_config()
 
     if not config:
         print("Registering builder ...")
-        config = register_builder(new_builder_key, builder_name, floating_dock_address)
+        config = register_builder(new_builder_key, builder_name, floating_dock_address, architecture)
         print("Registered.")
 
     while True:

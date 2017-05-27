@@ -5,6 +5,7 @@ class Api::V1::BuildersController < ApiController
     if params[:key] == Rails.configuration.x.marina.new_builder_key
       @builder = Builder.new
       @builder.auth_key = (0..16).map { ('a'..'z').to_a[rand(26)] }.join
+      @builder.architecture = params[:architecture]
       @builder.save!
       render json: @builder
     else
@@ -77,7 +78,7 @@ class Api::V1::BuildersController < ApiController
   end
 
   def get_scripts
-    send_data ActiveSupport::Gzip.compress(tar(Rails.root.join('lib/assets/marina/scripts')).string),
+    send_data ActiveSupport::Gzip.compress(tar(Rails.root.join('lib/assets/builder/scripts')).string),
       :filename => 'scripts.tar.gz',
       :type => "application/gzip",
       :disposition => "attachment"

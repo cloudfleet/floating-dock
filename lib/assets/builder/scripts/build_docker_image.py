@@ -37,7 +37,7 @@ def do_build(repository_url, image_name, image_tag, registry, library_arch, repo
     if parent_image.startswith("library/") or "/" not in parent_image:
       print("   - fetching %s image list from docker hub" % library_arch)
       unqualified_parent_image = parent_image.replace('library/', '')
-      repository_list = [item['name'] for item in json.load(urllib2.urlopen('https://hub.docker.com/v2/repositories/aarch64/?page_size=2000'))['results']]
+      repository_list = [item['name'] for item in json.load(urllib2.urlopen('https://hub.docker.com/v2/repositories/%s/?page_size=2000' % library_arch))['results']]
       unqualified_parent_repository, unqualified_parent_tag = unqualified_parent_image.split(":")
       if unqualified_parent_repository in repository_list:
         print("   - found %s in official %s images." % (unqualified_parent_repository, library_arch))
@@ -45,16 +45,16 @@ def do_build(repository_url, image_name, image_tag, registry, library_arch, repo
             item['name']
             for item
             in json.load(
-                urllib2.urlopen('https://hub.docker.com/v2/repositories/aarch64/%s/tags/?page_size=2000' % unqualified_parent_repository)
+                urllib2.urlopen('https://hub.docker.com/v2/repositories/%s/%s/tags/?page_size=2000' % (library_arch, unqualified_parent_repository))
                 )['results']
                 ]
         if unqualified_parent_tag in tag_list:
             print("   - found %s for %s in official %s images." % (unqualified_parent_tag, unqualified_parent_repository, library_arch))
             patched_parent_image = "%s/%s" % (library_arch, unqualified_parent_image)
         else:
-            patched_parent_image = "%s/%s" % (registry, parent_image)
+            patched_parent_image = "%s/library/%s" % (registry, unqualified_parent_image)
       else:
-        patched_parent_image = "%s/%s" % (registry, parent_image)
+        patched_parent_image = "%s/library/%s" % (registry, unqualified_parent_image)
     else:
       patched_parent_image = "%s/%s" % (registry, parent_image) # TODO accomodate origins from other thirdparty registries
 

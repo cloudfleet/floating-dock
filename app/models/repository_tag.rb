@@ -7,6 +7,8 @@ class RepositoryTag < ActiveRecord::Base
   end
 
   def build!
-    Build.create(repository_tag: self, start: DateTime.current, state: 'created')
+    ['armhf', 'aarch64'].each do |architecture|
+      Build.create(repository_tag: self, start: DateTime.current, state: 'created', architecture: architecture)
+    end
   end
 end
