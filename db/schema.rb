@@ -11,15 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170326140001) do
+ActiveRecord::Schema.define(version: 20170527072814) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "builders", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
     t.string   "auth_key"
+    t.string   "architecture"
   end
 
   create_table "builds", force: :cascade do |t|
@@ -32,6 +33,7 @@ ActiveRecord::Schema.define(version: 20170326140001) do
     t.integer  "builder_id"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
+    t.string   "architecture"
   end
 
   add_index "builds", ["builder_id"], name: "index_builds_on_builder_id", using: :btree
