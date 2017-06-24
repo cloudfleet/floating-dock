@@ -93,7 +93,7 @@ def main():
     registry = sys.argv[7]
     library_arch = sys.argv[8]
 
-    do_build(repository_url, image_repository, image_tag, registry, library_arch, repository_branch=repository_branch, dockerfile_path=dockerfile_path, image_additional_tags=image_additional_tags)
+    do_build(repository_url, image_repository, image_tag, "%s.%s" % (library_arch, registry), library_arch, repository_branch=repository_branch, dockerfile_path=dockerfile_path, image_additional_tags=image_additional_tags)
 
 if  __name__ =='__main__':
     main()
