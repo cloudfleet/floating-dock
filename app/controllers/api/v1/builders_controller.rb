@@ -42,7 +42,7 @@ class Api::V1::BuildersController < ApiController
             host: Rails.configuration.x.marina.docker_registry_host
           },
           library: {
-            arch: Rails.configuration.x.marina.docker_library_arch
+            arch: @build.architecture
           }
         }
         render json: build_info
