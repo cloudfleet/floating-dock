@@ -51,6 +51,7 @@ class Api::V1::RepositoriesController < ApiController
 
   def repository_params
     params[:repository_tags_attributes] = params[:repository_tags]
+    params[:public] = true
 
     params.permit(
       :name,
