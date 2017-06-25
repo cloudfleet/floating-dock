@@ -91,7 +91,7 @@ module Auth
     end
 
     def user_can_push?(repository)
-      (current_user && current_user.can?(:update, repository))
+      (current_user && current_user.is_a? Builder)
     end
 
     def error(code, status:, message: '')
