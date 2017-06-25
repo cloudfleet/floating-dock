@@ -23,7 +23,7 @@ class Api::V1::OrganizationsController < ApiController
 
   def create
     Organization.transaction do
-      @organization = Organization.create(organization_params)
+      @organization = Organization.create(name: organization_params[:name].downcase)
       @organization_user = OrganizationUser.create(user: current_api_v1_user, organization: @organization, role: :admin)
     end
     render json: @organization
