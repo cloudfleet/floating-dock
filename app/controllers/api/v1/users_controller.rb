@@ -7,6 +7,10 @@ class Api::V1::UsersController < ApiController
   end
 
   def show_api_key
+    unless @user.api_key
+      @user.api_key =  (0..32).map { ('a'..'z').to_a[rand(26)] }.join
+      @user.save!
+    end
     render json: {api_key: @user.api_key}
   end
 

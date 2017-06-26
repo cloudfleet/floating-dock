@@ -7,6 +7,10 @@ class Api::V1::OrganizationsController < ApiController
   end
 
   def show_api_key
+    unless @organization.api_key
+      @organization.api_key =  (0..32).map { ('a'..'z').to_a[rand(26)] }.join
+      @organization.save!
+    end
     render json: {api_key: @organization.api_key}
   end
 
