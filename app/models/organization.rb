@@ -7,7 +7,7 @@ class Organization < ActiveRecord::Base
   validate :uniqueness_of_name_with_user
 
   def uniqueness_of_name_with_user
-    if Organization.find_by(name: self.name)
+    if User.find_by(name: self.name)
       errors.add(:name, "exists already as user")
     end
   end
