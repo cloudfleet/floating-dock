@@ -15,20 +15,22 @@ class Api::V1::GithubController < ApiController
   def set_tag
     authorize_namespace!
 
-    owner_name = params[:repository][:owner][:name]
-    name = params[:repository][:name]
-    @repository = Repository.find_by!(owner_name: owner_name, name: name)
+    owner_name = params[:namespace]
+    @repository = Repository.find_by!(owner_name: owner_name, source_code_url: params[:repository][:clone_url])
     @tag = @repository.repository_tags.where(reference: params[:ref].split('/').last).first
   end
 
   def authorize_namespace!
     namespace = params[:namespace]
-    puts namespace
     owner = User.find_by(name: namespace) || Organization.find_by(name: namespace)
-    puts owner
-    unless owner && owner.api_key == params[:api_key] && params[:namespace] == params[:repository][:owner][:name]
+    unless owner && verify_signature(owner.api_key, request.raw_post)
       render text: 'forbidden', status: :forbidden
     end
+  end
+
+  def verify_signature(api_key, payload_body)
+    signature = 'sha1=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'), api_key, payload_body)
+    Rack::Utils.secure_compare(signature, request.env['HTTP_X_HUB_SIGNATURE'])
   end
 
 end
