@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
           :recoverable, :rememberable, :trackable, :validatable,
           :confirmable, :omniauthable
   include DeviseTokenAuth::Concerns::User
+  include PgSearch
 
   validates :name, uniqueness: true
   validates :name, format: { with: /\A[a-z]+\z/ }
@@ -14,6 +15,8 @@ class User < ActiveRecord::Base
       errors.add(:name, "exists already as organization")
     end
   end
+
+  multisearchable :against => [:name]
 
   delegate :can?, :cannot?, :to => :ability
 

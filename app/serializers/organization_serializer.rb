@@ -8,7 +8,7 @@ class OrganizationSerializer < ActiveModel::Serializer
   end
 
   def filter(keys)
-    if scope.can? :manage, object
+    if scope && scope.can?(:manage, object)
       keys
     else
       keys - [:api_key]

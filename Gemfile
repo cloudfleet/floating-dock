@@ -20,6 +20,7 @@ gem 'json-jwt'
 gem 'jwt'
 gem 'base32', '~> 0.3.0'
 gem 'pg'
+gem 'pg_search'
 
 gem 'rubygems-update', require: 'rubygems/package'
 

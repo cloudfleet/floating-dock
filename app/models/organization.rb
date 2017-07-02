@@ -1,4 +1,6 @@
 class Organization < ActiveRecord::Base
+  include PgSearch
+  
   has_many :organization_users
   has_many :users, through: :organization_users
 
@@ -11,6 +13,8 @@ class Organization < ActiveRecord::Base
       errors.add(:name, "exists already as user")
     end
   end
+
+  multisearchable :against => [:name]
 
   def repositories
     Repository.find_by(owner_name: self.name)

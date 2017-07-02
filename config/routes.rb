@@ -6,12 +6,11 @@ Rails.application.routes.draw do
         token_validations:  'overrides/token_validations',
         sessions:  'overrides/sessions'
       }
-      match 'registry_auth/:method/v2/:namespace/:name/*path', to: 'registry#auth', via: :all
-      match 'registry_auth/:method/v1/repositories:namespace/:name/*path', to: 'registry#auth', via: :all
-      get 'registry_auth/GET/v2/', to: 'registry#login'
-      get 'registry_auth/GET/v1/_ping', to: 'registry#login'
 
       get '/dashboard', to: 'dashboard#show'
+
+      get '/search', to: 'search#query_all'
+
       scope :repos do
         get '/', to: 'repositories#index'
         get '/:namespace', to: 'repositories#index'
