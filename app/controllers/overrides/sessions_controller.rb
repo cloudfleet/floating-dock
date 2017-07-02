@@ -3,7 +3,7 @@ module Overrides
 
     def render_create_success
       render json: {
-        data: @resource.as_json(methods: :organizations),
+        data: UserSerializer.new(@resource, scope: @resource).as_json,
         success: true
       }
     end
