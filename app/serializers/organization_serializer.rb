@@ -1,5 +1,5 @@
 class OrganizationSerializer < ActiveModel::Serializer
-  attributes :name, :api_key, :id, :members
+  attributes :name, :api_key, :id, :members, :api_key
 
   def members
     object.organization_users.map do |ou|
@@ -9,9 +9,9 @@ class OrganizationSerializer < ActiveModel::Serializer
 
   def filter(keys)
     if scope.can? :manage, object
-      keys + [:api_key]
-    else
       keys
+    else
+      keys - [:api_key]
     end
   end
 

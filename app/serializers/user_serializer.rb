@@ -1,5 +1,5 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :name, :id, :organizations
+  attributes :name, :id, :organizations, :api_key
 
   def organizations
     object.organization_users.map do |ou|
@@ -9,9 +9,9 @@ class UserSerializer < ActiveModel::Serializer
 
   def filter(keys)
     if scope.can? :manage, object
-      keys + [:api_key]
-    else
       keys
+    else
+      keys - [:api_key]
     end
   end
 end
