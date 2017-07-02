@@ -5,7 +5,7 @@ module Overrides
       # @resource will have been set by set_user_by_token concern
       if @resource
         render json: {
-          data: UserSerializer.new(@resource).as_json,
+          data: UserSerializer.new(@resource, scope: @resource).as_json,
           success: true
         }
       else
