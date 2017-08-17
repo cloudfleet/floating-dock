@@ -1,10 +1,17 @@
 class Api::V1::DashboardController < ApiController
 
   def show
+
+    render json: {
+      last_own_builds: last_own_builds,
+      last_global_successful_builds: Build.where(state: 'pushed').last(10)
+    }
+  end
+
+  def last_own_builds
     if current_api_v1_user
       namespaces = [current_api_v1_user.name] + current_api_v1_user.organizations.collect(&:name)
-
-      render json: Hash[*namespaces.map{|ns| [ns, stats(ns)]}.reduce(:+)]
+      Build.joins(repository_tag: :repository).where(repositories: {owner_name: namespaces}).last(10)
     end
   end
 
