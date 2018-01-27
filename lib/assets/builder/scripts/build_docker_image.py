@@ -28,44 +28,6 @@ def do_build(repository_url, image_name, image_tag, registry, library_arch, repo
   if p.returncode != 0:
     sys.exit(p.returncode)
 
-  print(" - patching Dockerfile")
-
-  with open("%s/%s/Dockerfile" % (working_directory, dockerfile_path), "r+") as dockerfile:
-    dockerfile_content = dockerfile.read()
-    parent_image = pattern.findall(dockerfile_content)[0]
-    print("   - Parent Image Original: %s" % parent_image)
-    if parent_image.startswith("library/") or "/" not in parent_image:
-      print("   - fetching %s image list from docker hub" % library_arch)
-      unqualified_parent_image = parent_image.replace('library/', '')
-      repository_list = [item['name'] for item in json.load(urllib2.urlopen('https://hub.docker.com/v2/repositories/%s/?page_size=2000' % library_arch))['results']]
-      unqualified_parent_repository, unqualified_parent_tag = unqualified_parent_image.split(":")
-      if unqualified_parent_repository in repository_list:
-        print("   - found %s in official %s images." % (unqualified_parent_repository, library_arch))
-        tag_list = [
-            item['name']
-            for item
-            in json.load(
-                urllib2.urlopen('https://hub.docker.com/v2/repositories/%s/%s/tags/?page_size=2000' % (library_arch, unqualified_parent_repository))
-                )['results']
-                ]
-        if unqualified_parent_tag in tag_list:
-            print("   - found %s for %s in official %s images." % (unqualified_parent_tag, unqualified_parent_repository, library_arch))
-            patched_parent_image = "%s/%s" % (library_arch, unqualified_parent_image)
-        else:
-            patched_parent_image = "%s/library/%s" % (registry, unqualified_parent_image)
-      else:
-        patched_parent_image = "%s/library/%s" % (registry, unqualified_parent_image)
-    else:
-      patched_parent_image = "%s/%s" % (registry, parent_image) # TODO accomodate origins from other thirdparty registries
-
-    print("   - Patched parent image: %s" % patched_parent_image)
-
-    patched_dockerfile_content = dockerfile_content.replace(parent_image, patched_parent_image)
-
-  with open("%s/%s/Dockerfile" % (working_directory, dockerfile_path), "w") as dockerfile:
-    dockerfile.write(patched_dockerfile_content)
-
-
   print(" - building Docker image as %s/%s:%s" % (registry,image_name,image_tag) )
   response_code =  subprocess.call(['docker', 'build', '-t', '%s/%s:%s' % (registry,image_name,image_tag), '%s/%s' % (working_directory, dockerfile_path)])
   if response_code != 0:
